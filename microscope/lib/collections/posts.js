@@ -1,11 +1,5 @@
 Posts = new Mongo.Collection("posts");
 
-// Posts.allow({
-//     insert: function(userId, doc) {
-//         return !!userId;
-//     }
-// });
-
 Meteor.methods({
     postInsert: function(postAttributes) {
         console.log(check);
@@ -14,6 +8,15 @@ Meteor.methods({
             title: String,
             url: String
         });
+
+        var postWithSameLink = Posts.findOne({url: postAttributes.url});
+        if (postWithSameLink) {
+            return {
+                postExists: true,
+                _id: postWithSameLink._id
+            }
+        }
+
         var user = Meteor.user();
         var post = _.extend(postAttributes, {
             userId: user._id,
