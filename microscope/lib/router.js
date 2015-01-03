@@ -1,3 +1,4 @@
+// configure
 Router.configure({
     layoutTemplate: "layout",
     loadingTemplate: "loading",
@@ -5,6 +6,7 @@ Router.configure({
     waitOn: function() { return Meteor.subscribe("posts"); }
 });
 
+// route
 Router.route("/", {name: "postsList"});
 
 Router.route("/posts/:_id", {
@@ -14,4 +16,14 @@ Router.route("/posts/:_id", {
 
 Router.route("/submit", {name: "postSubmit"});
 
-Router.onBeforeAction("dataNotFound", {only: "postPage"});    
+// onBeforeAction
+var requireLogin = function() {
+    if (!Meteor.user()) {
+        this.render("accessDenied");
+    } else {
+        this.next();
+    }
+}
+
+Router.onBeforeAction("dataNotFound", {only: "postPage"});
+Router.onBeforeAction(requireLogin, {only: "postSubmit"});   
