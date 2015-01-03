@@ -1,8 +1,18 @@
 Posts = new Mongo.Collection("posts");
 
+Posts.allow({
+    update: function(userId, post) { return ownsDocument(userId, post); },
+    remove: function(userId, post) { return ownsDocument(userId, post); }
+});
+
+Posts.deny({
+    update: function(userId, post, fieldNames) {
+        return(_.without(fieldNames, "url", "title").length > 0);
+    }
+});
+
 Meteor.methods({
     postInsert: function(postAttributes) {
-        console.log(check);
         check(Meteor.userId(), String);
         check(postAttributes, {
             title: String,
@@ -18,7 +28,7 @@ Meteor.methods({
         }
 
         var user = Meteor.user();
-        var post = _.extend(postAttributes, {
+        var post = _.extend(postAttributes, { //underscore extend is basically inheritance
             userId: user._id,
             author: user.username,
             submitted: new Date()
