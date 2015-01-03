@@ -11,4 +11,4 @@ Router.route("/posts/:_id", {
     data: function() { return Posts.findOne(this.params._id); }
 });
 
-Router.onBeforeAction("dataNotFound", {only: "postPage"});
+Router.onBeforeAction("dataNotFound", {only: "postPage"}); 
