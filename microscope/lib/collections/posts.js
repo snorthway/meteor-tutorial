@@ -37,7 +37,8 @@ Meteor.methods({
         var post = _.extend(postAttributes, { //underscore extend is basically inheritance
             userId: user._id,
             author: user.username,
-            submitted: new Date()
+            submitted: new Date(),
+            commentsCount: 0
         });
         var postId = Posts.insert(post);
         return {
