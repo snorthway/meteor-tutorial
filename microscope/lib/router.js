@@ -61,6 +61,13 @@ BestPostsController = PostsListController.extend({
     }
 });
 
+ClickedPostsController = PostsListController.extend({
+    sort: {clicks: -1, submitted: -1, _id: -1},
+    nextPath: function() {
+        return Router.routes.clickedPosts.path({postsLimit: this.postsLimit() + this.increment});
+    }
+});
+
 
 // routes
 
@@ -113,17 +120,6 @@ Router.route("/api/posts/:_id", {
         }
         this.response.end();
     }
-})
-
-Router.route("/posts/:_id", {
-    name: "postPage",
-    waitOn: function() {
-        return [
-            Meteor.subscribe("singlePost", this.params._id),
-            Meteor.subscribe("comments", this.params._id)
-        ];
-    },
-    data: function() { return Posts.findOne(this.params._id); }
 });
 
 Router.route("/posts/:_id/edit", {
@@ -143,6 +139,19 @@ Router.route("/", {
 
 Router.route("/new/:postsLimit?", {name: "newPosts"});
 Router.route("/best/:postsLimit?", {name: "bestPosts"});
+Router.route("/clicked/:postsLimit?", {name: "clickedPosts"});
+
+Router.route("/posts/:_id", {
+    name: "postPage",
+    waitOn: function() {
+        return [
+            Meteor.subscribe("singlePost", this.params._id),
+            Meteor.subscribe("comments", this.params._id)
+        ];
+    },
+    data: function() { return Posts.findOne(this.params._id); }
+});
+
 
 // onBeforeAction
 if (Meteor.isClient) {
