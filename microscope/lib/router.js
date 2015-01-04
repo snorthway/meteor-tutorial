@@ -63,6 +63,16 @@ BestPostsController = PostsListController.extend({
 
 
 // routes
+
+Router.route("/feed.xml", {
+    where: "server",
+    name: "rss", 
+    action: function() {
+        this.response.write("hello world");
+        this.response.end();
+    }
+});
+
 Router.route("/posts/:_id", {
     name: "postPage",
     waitOn: function() {
@@ -93,5 +103,7 @@ Router.route("/new/:postsLimit?", {name: "newPosts"});
 Router.route("/best/:postsLimit?", {name: "bestPosts"});
 
 // onBeforeAction
-Router.onBeforeAction("dataNotFound", {only: "postPage"});
-Router.onBeforeAction(requireLogin, {only: "postSubmit"});   
+if (Meteor.isClient) {
+    Router.onBeforeAction("dataNotFound", {only: "postPage"});
+    Router.onBeforeAction(requireLogin, {only: "postSubmit"});
+}
