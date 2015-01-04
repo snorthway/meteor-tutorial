@@ -6,8 +6,9 @@ Posts.allow({
 });
 
 Posts.deny({
-    update: function(userId, post, fieldNames) {
-        return(_.without(fieldNames, "url", "title").length > 0);
+    update: function(userId, post, fieldNames, modifier) {
+        var errors = validatePost(modifier.$set);
+        return errors.title || errors.url;
     }
 });
 
@@ -18,6 +19,11 @@ Meteor.methods({
             title: String,
             url: String
         });
+
+        var errors = validatePost(postAttributes);
+        if (errors.title || errors.url) {
+            throw new Meteor.Error("invalid-post", "You must set a title and URL for your post");
+        }
 
         var postWithSameLink = Posts.findOne({url: postAttributes.url});
         if (postWithSameLink) {
@@ -39,3 +45,14 @@ Meteor.methods({
         };
     }
 });
+
+validatePost = function(post) {
+    var errors = {};
+    if (!post.title) {
+        errors.title = "Please fill in a title";
+    }
+    if (!post.url) {
+        errors.url = "Please fill in a URL";
+    }
+    return errors;
+}
