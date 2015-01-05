@@ -26,7 +26,7 @@ Template.postSubmit.events({
 
 Template.postSubmit.created = function() {
     Session.set("postSubmitErrors", {});
-}
+};
 
 Template.postSubmit.helpers({
     errorMessage: function(field) {

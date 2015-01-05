@@ -30,7 +30,7 @@ Meteor.methods({
             return {
                 postExists: true,
                 _id: postWithSameLink._id
-            }
+            };
         }
 
         var user = Meteor.user();
@@ -78,4 +78,4 @@ validatePost = function(post) {
         errors.url = "Please fill in a URL";
     }
     return errors;
-}
+};

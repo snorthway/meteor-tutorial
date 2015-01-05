@@ -19,7 +19,7 @@ var requireLogin = function() {
     } else {
         this.next();
     }
-}
+};
 
 PostsListController = RouteController.extend({
     template: "postsList",

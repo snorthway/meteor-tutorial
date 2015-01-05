@@ -7,7 +7,7 @@ Template.postEdit.events({
         var postProperties = {
             url: $(e.target).find("[name=url]").val(),
             title: $(e.target).find("[name=title]").val()
-        }
+        };
 
         var errors = validatePost(postProperties);
         if (errors.title || errors.url) {
@@ -36,7 +36,7 @@ Template.postEdit.events({
 
 Template.postEdit.created = function() {
     Session.set("postEditErrors", {});
-}
+};
 
 Template.postEdit.helpers({
     errorMessage: function(field) {
